@@ -16,13 +16,9 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-
-
     // createAdmin
     // updateAdmin
     // deleteAdmin
-
-
 
     // -----Admin-Barber relation
 
@@ -46,25 +42,24 @@ public class AdminController {
     // setGlobalPricing
 
     // -----Admin-Review relation
-    //approveReview
-    //removeReview
+    // approveReview
+    // removeReview
 
     // -----Admin-Appointment relation
-    //viewAllAppointment
-    //authorityToCancelAppointment
-    //authorityToRescheduleAppointment
+    // viewAllAppointment
+    // authorityToCancelAppointment
+    // authorityToRescheduleAppointment
 
     // -----Admin-Content relation
-    //Terms-of-Service
-    //FAQ
-    //Contact-Us
-    //Offer
+    // Terms-of-Service
+    // FAQ
+    // Contact-Us
+    // Offer
 
     // -----Admin-Notification
-    //System-Maintenance
-    //Announcement
-    //Missing-Profiles
-    
+    // System-Maintenance
+    // Announcement
+    // Missing-Profiles
 
     // -----
 }
