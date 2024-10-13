@@ -40,6 +40,7 @@ public class Barbers {
     @DynamoDBAttribute(attributeName = "password")
     @NotNull(message = "Password can't be null")
     @Size(min = 6, message = "Your Password must be at least 6 character long")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{6,}$", message = "Password must contain at least one letter, one number, and one special character")
     private String password;
 
     @DynamoDBAttribute(attributeName = "barberShopName")
