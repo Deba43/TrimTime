@@ -1,8 +1,11 @@
 package com.debadatta.TrimTime.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
 import com.debadatta.TrimTime.repo.CustomersRepo;
 
@@ -27,6 +30,10 @@ public class CustomersService {
   public String deleteProfile(String customer_id) {
     return customersRepo.deleteProfile(customer_id);
 
+  }
+
+  public List<Barbers> searchByBarbers(String name) {
+    return customersRepo.findBarbersByName(name);
   }
 
 }

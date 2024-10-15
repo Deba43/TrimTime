@@ -1,9 +1,17 @@
 package com.debadatta.TrimTime.repo;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
 
 import lombok.AllArgsConstructor;
@@ -48,6 +56,22 @@ public class CustomersRepo {
         }
         dynamoDBMapper.delete(existingCustomers);
         return "Customer profile for " + existingCustomers.getName() + " has been deleted successfully.";
+    }
+
+    public List<Barbers> findBarbersByName(String name) {
+        Map<String, AttributeValue> eav = new HashMap<>();
+        eav.put(":name", new AttributeValue().withS(name));
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("contains(name, :name)") // Use 'contains' for partial name match
+                .withExpressionAttributeValues(eav);
+
+        List<Barbers> barbers = dynamoDBMapper.scan(Barbers.class, scanExpression);
+
+        if (barbers == null || barbers.isEmpty()) {
+            return new ArrayList<>(); // Return empty list if no matches
+        }
+        return barbers;
     }
 
 }
