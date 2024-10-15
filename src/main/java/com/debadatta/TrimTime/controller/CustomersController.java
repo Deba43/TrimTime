@@ -53,7 +53,7 @@ public class CustomersController {
     // searchByLocation
     // searchByBarber
     @GetMapping("/searchByBarber{name}")
-    public ResponseEntity<List<Barbers>> searchByBarber(@PathVariable String name) {
+    public ResponseEntity<List<Barbers>> searchByBarbers(@PathVariable String name) {
         List<Barbers> barbers = customersService.searchByBarbers(name);
         if (barbers != null & !barbers.isEmpty()) {
             return ResponseEntity.ok(barbers);
