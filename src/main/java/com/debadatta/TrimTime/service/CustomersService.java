@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
+import com.debadatta.TrimTime.repo.AppointmentsRepo;
 import com.debadatta.TrimTime.repo.CustomersRepo;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +19,8 @@ public class CustomersService {
 
   @Autowired
   private CustomersRepo customersRepo;
+  @Autowired
+  private AppointmentsRepo appointmentsRepo;
 
   public String createProfile(Customers customers) {
     return customersRepo.createProfile(customers);
@@ -38,6 +42,10 @@ public class CustomersService {
 
   public List<Barbers> searchByLocation(String location) {
     return customersRepo.findBarbersByLocation(location);
+  }
+
+  public String bookAppointment(Appointments appointment) {
+    return appointmentsRepo.bookAppointment(appointment);
   }
 
 }

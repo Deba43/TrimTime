@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
 import com.debadatta.TrimTime.service.CustomersService;
@@ -75,6 +76,11 @@ public class CustomersController {
     }
 
     // createAppointment
+    @PostMapping("/bookAppointment")
+    public ResponseEntity<String> bookAppointment(@RequestBody Appointments appointment) {
+        String result = customersService.bookAppointment(appointment);
+        return ResponseEntity.ok(result); // Return booking confirmation
+    }
     // cancelAppointment
     // rescheduleAppointment
 

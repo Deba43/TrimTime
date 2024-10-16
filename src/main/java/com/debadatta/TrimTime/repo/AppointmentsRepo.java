@@ -39,4 +39,9 @@ public class AppointmentsRepo {
 
     }
 
+    public String bookAppointment(Appointments appointment) {
+        dynamoDBMapper.save(appointment);
+        return "Appointment successfully booked with barber ID: " + appointment.getBarber_id();
+    }
+
 }
