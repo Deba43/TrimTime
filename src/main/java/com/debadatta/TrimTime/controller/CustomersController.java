@@ -51,6 +51,18 @@ public class CustomersController {
     }
 
     // searchByLocation
+
+    @GetMapping("/searchByLocation/{location}")
+    public ResponseEntity<List<Barbers>> searchByLocation(@PathVariable String location) {
+        List<Barbers> barbers = customersService.searchByLocation(location);
+
+        if (barbers != null && !barbers.isEmpty()) {
+            return ResponseEntity.ok(barbers); // Return barbers at that location
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Return 404 if no barbers found
+        }
+    }
+
     // searchByBarber
     @GetMapping("/searchByBarber{name}")
     public ResponseEntity<List<Barbers>> searchByBarbers(@PathVariable String name) {

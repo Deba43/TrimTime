@@ -74,4 +74,20 @@ public class CustomersRepo {
         return barbers;
     }
 
+    public List<Barbers> findBarbersByLocation(String location) {
+        Map<String, AttributeValue> eav = new HashMap<>();
+        eav.put(":location", new AttributeValue().withS(location));
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("location = :location") // Match barbers at the given location
+                .withExpressionAttributeValues(eav);
+
+        List<Barbers> barbers = dynamoDBMapper.scan(Barbers.class, scanExpression);
+
+        if (barbers == null || barbers.isEmpty()) {
+            return new ArrayList<>(); // Return empty list if no barbers found
+        }
+        return barbers;
+    }
+
 }

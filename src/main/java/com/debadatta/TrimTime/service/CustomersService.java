@@ -36,4 +36,8 @@ public class CustomersService {
     return customersRepo.findBarbersByName(name);
   }
 
+  public List<Barbers> searchByLocation(String location) {
+    return customersRepo.findBarbersByLocation(location);
+  }
+
 }
