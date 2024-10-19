@@ -81,7 +81,14 @@ public class CustomersController {
         String result = customersService.bookAppointment(appointment);
         return ResponseEntity.ok(result); // Return booking confirmation
     }
+
     // cancelAppointment
+    @PostMapping("/cancelAppointment")
+    public ResponseEntity<String> cancelAppointment(@RequestBody Appointments appointment) {
+        String result = customersService.cancelAppointment(appointment);
+        return ResponseEntity.ok(result); // Return cancellation confirmation
+    }
+
     // rescheduleAppointment
 
 }

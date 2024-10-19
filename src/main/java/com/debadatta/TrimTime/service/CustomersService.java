@@ -48,4 +48,8 @@ public class CustomersService {
     return appointmentsRepo.bookAppointment(appointment);
   }
 
+  public String cancelAppointment(Appointments appointment) {
+    return appointmentsRepo.cancelAppointment(appointment);
+  }
+
 }

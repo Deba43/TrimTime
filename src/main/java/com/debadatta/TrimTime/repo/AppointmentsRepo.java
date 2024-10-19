@@ -44,4 +44,16 @@ public class AppointmentsRepo {
         return "Appointment successfully booked with barber ID: " + appointment.getBarber_id();
     }
 
+    public String cancelAppointment(Appointments appointment) {
+
+        Appointments existingAppointment = dynamoDBMapper.load(Appointments.class, appointment.getAppointment_id());
+
+        if (existingAppointment != null && existingAppointment.getCustomer_id().equals(appointment.getCustomer_id())) {
+            dynamoDBMapper.delete(existingAppointment);
+            return "Appointment successfully canceled for customer ID: " + appointment.getCustomer_id();
+        } else {
+            return "Appointment not found or not authorized to cancel.";
+        }
+    }
+
 }
