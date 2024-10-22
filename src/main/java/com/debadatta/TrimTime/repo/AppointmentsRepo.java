@@ -56,4 +56,12 @@ public class AppointmentsRepo {
         }
     }
 
+    public Appointments getAppointmentId(String appointment_id) {
+        return dynamoDBMapper.load(Appointments.class, appointment_id);
+    }
+
+    public void save(Appointments appointments) {
+        dynamoDBMapper.save(appointments);
+    }
+
 }
