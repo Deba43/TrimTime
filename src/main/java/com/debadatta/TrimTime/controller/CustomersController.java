@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
+import com.debadatta.TrimTime.service.AppointmentsService;
 import com.debadatta.TrimTime.service.CustomersService;
 
 import jakarta.validation.Valid;
@@ -31,6 +32,8 @@ public class CustomersController {
 
     @Autowired
     private CustomersService customersService;
+    @Autowired
+    private AppointmentsService appointmentsService;
 
     // createProfile
     @PostMapping("/createProfile")
@@ -52,7 +55,6 @@ public class CustomersController {
     }
 
     // searchByLocation
-
     @GetMapping("/searchByLocation/{location}")
     public ResponseEntity<List<Barbers>> searchByLocation(@PathVariable String location) {
         List<Barbers> barbers = customersService.searchByLocation(location);
@@ -90,5 +92,18 @@ public class CustomersController {
     }
 
     // rescheduleAppointment
+    @PutMapping("/rescheduleAppointment/{appointment_id}")
+    public ResponseEntity<String> rescheduleAppointment(@PathVariable String appointment_id,
+            @RequestBody Appointments updatedAppointment) {
+
+        boolean isUpdated = appointmentsService.rescheduleAppointment(appointment_id, updatedAppointment);
+
+        if (isUpdated) {
+            return ResponseEntity.ok("Appointment rescheduled successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Barber is unavailable or appointment could not be updated");
+        }
+
+    }
 
 }
