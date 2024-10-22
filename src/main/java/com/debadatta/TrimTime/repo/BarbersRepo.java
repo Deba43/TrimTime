@@ -36,8 +36,8 @@ public class BarbersRepo {
             existingBarbers.setBarberShopName(barbers.getBarberShopName());
         if (barbers.getLocation() != null)
             existingBarbers.setLocation(barbers.getLocation());
-        if (barbers.getIsAvailable() != null)
-            existingBarbers.setIsAvailable(barbers.getIsAvailable());
+        if (barbers.getAvailability() != null)
+            existingBarbers.setAvailability(barbers.getAvailability());
         if (barbers.getExperience() != null)
             existingBarbers.setExperience(barbers.getExperience());
         if (barbers.getRole() != null)
@@ -60,6 +60,10 @@ public class BarbersRepo {
         }
         dynamoDBMapper.delete(exitingBarbers);
         return "Barber profile for " + exitingBarbers.getName() + " has been deleted successfully.";
+    }
+
+    public Barbers getBarbersById(String barber_id) {
+        return dynamoDBMapper.load(Barbers.class, barber_id);
     }
 
 }
