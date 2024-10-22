@@ -1,5 +1,9 @@
 package com.debadatta.TrimTime.model;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -51,9 +55,9 @@ public class Barbers {
     @NotNull(message = "location can't be null")
     private String location;
 
-    @DynamoDBAttribute(attributeName = "isAvailable")
+    @DynamoDBAttribute(attributeName = "availability")
     @NotNull(message = "Availability status cannot be null")
-    private String isAvailable;
+    private Map<Date, List<String>> availability;
 
     @DynamoDBAttribute(attributeName = "experience")
     private Integer experience;
@@ -66,5 +70,15 @@ public class Barbers {
 
     @DynamoDBAttribute(attributeName = "profilePictureUrl")
     private String profilePictureUrl;
+
+    public boolean isAvailable(String a_date, String a_time) {
+
+        if (availability.containsKey(a_date)) {
+            List<String> availableTimes = availability.get(a_date);
+            return availableTimes.contains(a_time);
+        }
+        return false;
+
+    }
 
 }
