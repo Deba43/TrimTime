@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/Admin")
+@RequestMapping("/Admin")
 public class AdminController {
 
     @Autowired
@@ -60,7 +60,7 @@ public class AdminController {
     // -----Admin-Customer relation
 
     // suspendAccount
-    
+
     // deleteAccount
     // notification
     // viewProfiles

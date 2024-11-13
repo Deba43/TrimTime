@@ -19,14 +19,14 @@ import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
 import com.debadatta.TrimTime.service.AppointmentsService;
+
 import com.debadatta.TrimTime.service.CustomersService;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/Customers")
+@RequestMapping("/Customers")
 
 public class CustomersController {
 
@@ -36,11 +36,6 @@ public class CustomersController {
     private AppointmentsService appointmentsService;
 
     // createProfile
-    @PostMapping("/createProfile")
-    public ResponseEntity<String> createProfile(@Valid @RequestBody Customers customers) {
-        String customerId = customersService.createProfile(customers);
-        return ResponseEntity.ok(customerId);
-    }
 
     // updateProfile
     @PutMapping("/updateProfile/{customer_id}")

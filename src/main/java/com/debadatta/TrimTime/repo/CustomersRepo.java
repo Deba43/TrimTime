@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -88,6 +89,11 @@ public class CustomersRepo {
             return new ArrayList<>(); // Return empty list if no barbers found
         }
         return barbers;
+    }
+
+    public Optional<Customers> findByMobileNumber(String mobileNumber) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findByMobileNumber'");
     }
 
 }

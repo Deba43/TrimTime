@@ -88,10 +88,40 @@
 
 
 		<dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>4.4.0</version>
-       </dependency>
+           <groupId>io.jsonwebtoken</groupId>
+           <artifactId>jjwt-api</artifactId>
+           <version>0.12.6</version>
+        </dependency>
+
+		<dependency>
+           <groupId>io.jsonwebtoken</groupId>
+           <artifactId>jjwt-impl</artifactId>
+           <version>0.12.6</version>
+           <scope>runtime</scope>
+        </dependency>
+		
+
+		<dependency>
+           <groupId>io.jsonwebtoken</groupId>
+           <artifactId>jjwt-jackson</artifactId>
+           <version>0.12.6</version>
+           <scope>runtime</scope>
+        </dependency>
+
+		<dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>9.45</version>
+        </dependency>
+     
+
+
 
 		<dependency>
             <groupId>com.amazonaws</groupId>
@@ -119,6 +149,13 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.12.773</version>
       </dependency>
+
+	  <dependency>
+           <groupId>com.amazonaws</groupId>
+           <artifactId>aws-java-sdk-cognitoidp</artifactId>
+           <version>1.12.777</version>
+      </dependency>
+
 
 
 

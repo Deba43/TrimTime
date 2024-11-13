@@ -25,7 +25,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/Barbers")
+@RequestMapping("/Barbers")
 public class BarbersController {
 
     @Autowired
