@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.debadatta.TrimTime.dto.CustomerRegistrationRequest;
 import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
@@ -22,11 +23,12 @@ import com.debadatta.TrimTime.service.AppointmentsService;
 
 import com.debadatta.TrimTime.service.CustomersService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/Customers")
+@RequestMapping("/Customer")
 
 public class CustomersController {
 
@@ -35,10 +37,23 @@ public class CustomersController {
     @Autowired
     private AppointmentsService appointmentsService;
 
-    // createProfile
+    public CustomersController(CustomersService customersService) {
+        this.customersService = customersService;
+    }
+
+     @PostMapping("/customer-registration")
+    public ResponseEntity<Customers> registerCustomer(@Valid @RequestBody CustomerRegistrationRequest request) {
+        Customers registeredCustomer = customersService.registerCustomer(request);
+
+        if (registeredCustomer != null) {
+            return ResponseEntity.ok(registeredCustomer);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     // updateProfile
-    @PutMapping("/updateProfile/{customer_id}")
+    @PutMapping("dashboard/{customer_id}")
     public Customers updateProfile(@PathVariable String customer_id, @RequestBody Customers customers) {
         return customersService.updateProfile(customer_id, customers);
     }

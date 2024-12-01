@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.debadatta.TrimTime.dto.CustomerRegistrationRequest;
 import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
@@ -21,14 +23,25 @@ public class CustomersService {
   private CustomersRepo customersRepo;
   @Autowired
   private AppointmentsRepo appointmentsRepo;
+  @Autowired
+  final private DynamoDBMapper dynamoDBMapper;
 
   public String createProfile(Customers customers) {
     return customersRepo.createProfile(customers);
   }
 
-  public Customers updateProfile(String customer_id, Customers customers) {
-    return customersRepo.updateProfile(customer_id, customers);
+  
+  public Customers registerCustomer(CustomerRegistrationRequest request) {
+    Customers customer = new Customers();
+    customer.setName(request.getName());
+    customer.setAge(request.getAge());
+    customer.setMobileNumber(request.getMobileNumber());
+    customer.setEmail(request.getEmail());
+    customer.setProfilePictureUrl(request.getProfilePictureUrl());
 
+    dynamoDBMapper.save(customer);
+
+    return customer;
   }
 
   public String deleteProfile(String customer_id) {
@@ -51,5 +64,10 @@ public class CustomersService {
   public String cancelAppointment(Appointments appointment) {
     return appointmentsRepo.cancelAppointment(appointment);
   }
+
+public Customers updateProfile(String customer_id, Customers customers) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'updateProfile'");
+}
 
 }

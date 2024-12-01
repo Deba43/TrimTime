@@ -7,12 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
-import com.amazonaws.services.cognitoidp.model.AttributeType;
+import com.amazonaws.services.cognitoidp.model.AuthFlowType;
 import com.amazonaws.services.cognitoidp.model.AuthenticationResultType;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
-import com.amazonaws.services.cognitoidp.model.SignUpRequest;
-import com.amazonaws.services.cognitoidp.model.SignUpResult;
+
 import com.debadatta.TrimTime.dto.User;
 import com.debadatta.TrimTime.repo.UserRepo;
 
@@ -37,62 +36,81 @@ public class CognitoService {
     @Autowired
     private UserRepo userRepo;
 
-    public User registerUser(String username, String email, String password) {
-        // Set up the AWS Cognito registration request
-        SignUpRequest signUpRequest = new SignUpRequest()
-                .withClientId(clientId)
-                .withUsername(username)
-                .withPassword(password)
-                .withUserAttributes(
-                        new AttributeType().withName("email").withValue(email));
-
-        // Register the user with Amazon Cognito
-        try {
-            SignUpResult signUpResponse = cognitoIdentityProvider.signUp(signUpRequest);
-
-            User registeredUser = new User();
-            registeredUser.setUsername(username);
-            registeredUser.setEmail(email);
-            registeredUser.setPassword(password);
-
-            return userRepo.save(registeredUser);
-
-        } catch (Exception e) {
-            throw new RuntimeException("User registration failed: " + e.getMessage(), e);
-        }
+    public CognitoService(AWSCognitoIdentityProvider cognitoIdentityProvider) {
+        this.cognitoIdentityProvider = cognitoIdentityProvider;
     }
 
-    public User loginUser(String username, String password) {
-        // Set up the authentication request
+    public User loginUser(String mobile_number, String otp) {
+
         InitiateAuthRequest authRequest = new InitiateAuthRequest()
-                .withAuthFlow("USER_PASSWORD_AUTH")
+                .withAuthFlow("CUSTOM_AUTH")
                 .withClientId(clientId)
-                .withAuthParameters(
-                        Map.of(
-                                "USERNAME", username, // Use email as the username
-                                "PASSWORD", password));
+                .withAuthParameters(Map.of("USERNAME", mobile_number, "ANSWER", otp)); // Cognito OTP flow
 
         try {
             InitiateAuthResult authResult = cognitoIdentityProvider.initiateAuth(authRequest);
-            System.out.println(authResult);
             AuthenticationResultType authResponse = authResult.getAuthenticationResult();
 
-            // At this point, the user is successfully authenticated, and you can access JWT
-            // tokens:
             String accessToken = authResponse.getAccessToken();
             String idToken = authResponse.getIdToken();
             String refreshToken = authResponse.getRefreshToken();
 
-            // You can decode and verify the JWT tokens for user information
+            // Create User object and set tokens
+            User user = new User();
+            user.setMobile_number(mobile_number);
+            user.setAccessToken(accessToken);
+            user.setAccessToken(idToken);
+            user.setRefreshToken(refreshToken);
 
-            User loggedInUser = new User();
-            loggedInUser.setUsername(username);
-            loggedInUser.setAccessToken(accessToken); // Store the token for future requests
+            return user;
+        } catch (Exception e) {
+            throw new RuntimeException("Login failed: " + e.getMessage(), e);
+        }
+    }
 
-            return loggedInUser;
+    public String refreshToken(String refreshToken) {
+        InitiateAuthRequest refreshAuthRequest = new InitiateAuthRequest()
+                .withAuthFlow("REFRESH_TOKEN_AUTH")
+                .withClientId(clientId)
+                .withAuthParameters(Map.of("REFRESH_TOKEN", refreshToken));
+
+        try {
+            InitiateAuthResult refreshResult = cognitoIdentityProvider.initiateAuth(refreshAuthRequest);
+            return refreshResult.getAuthenticationResult().getAccessToken();
+        } catch (Exception e) {
+            throw new RuntimeException("Token refresh failed: " + e.getMessage(), e);
+        }
+    }
+
+    private boolean verifyOtp(String mobileNumber, String otp) {
+        InitiateAuthRequest authRequest = new InitiateAuthRequest()
+                .withAuthFlow(AuthFlowType.CUSTOM_AUTH.toString()) // Use predefined AuthFlowType enum
+                .withClientId(clientId) // Client ID for Cognito user pool
+                .withAuthParameters(Map.of(
+                        "USERNAME", mobileNumber, // Cognito expects "USERNAME" for the user identifier
+                        "ANSWER", otp // "ANSWER" is the expected key for OTP in custom auth
+                ));
+
+        try {
+
+            InitiateAuthResult authResult = cognitoIdentityProvider.initiateAuth(authRequest);
+
+            return true;
+
+        } catch (com.amazonaws.services.cognitoidp.model.NotAuthorizedException e) {
+
+            System.err.println("Invalid OTP for mobile number: " + mobileNumber);
+            return false;
+
+        } catch (com.amazonaws.services.cognitoidp.model.ResourceNotFoundException e) {
+
+            System.err.println("User not found: " + mobileNumber);
+            return false;
 
         } catch (Exception e) {
-            throw new RuntimeException("User login failed: " + e.getMessage(), e);
+
+            System.err.println("An error occurred while verifying OTP: " + e.getMessage());
+            return false;
         }
     }
 

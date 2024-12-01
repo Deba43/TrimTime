@@ -39,8 +39,6 @@ public class CustomersRepo {
             existingCustomers.setName(customers.getName());
         if (existingCustomers.getMobileNumber() != null)
             existingCustomers.setMobileNumber(customers.getMobileNumber());
-        if (existingCustomers.getPassword() != null)
-            existingCustomers.setPassword(customers.getPassword());
         if (existingCustomers.getProfilePictureUrl() != null)
             existingCustomers.setProfilePictureUrl(customers.getProfilePictureUrl());
 

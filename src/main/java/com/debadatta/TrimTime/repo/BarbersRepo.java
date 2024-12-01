@@ -30,8 +30,6 @@ public class BarbersRepo {
             existingBarbers.setName(barbers.getName());
         if (barbers.getMobileNumber() != null)
             existingBarbers.setMobileNumber(barbers.getMobileNumber());
-        if (barbers.getPassword() != null)
-            existingBarbers.setPassword(barbers.getPassword());
         if (barbers.getBarberShopName() != null)
             existingBarbers.setBarberShopName(barbers.getBarberShopName());
         if (barbers.getLocation() != null)

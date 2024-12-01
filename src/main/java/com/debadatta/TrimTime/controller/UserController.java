@@ -41,7 +41,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<User> loginUser(@Valid @RequestBody UserLoginRequest userLoginRequest) {
-        User loggedInUser = userService.loginUser(userLoginRequest.getUsername(), userLoginRequest.getPassword());
+        User loggedInUser = userService.loginUser(userLoginRequest.getMobileNumber());
 
         if (loggedInUser != null) {
 

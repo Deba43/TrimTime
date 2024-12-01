@@ -5,5 +5,5 @@ import com.debadatta.TrimTime.dto.UserRegistrationRequest;
 
 public interface UserService {
     User registerUser(UserRegistrationRequest userRegistrationRequest);
-    User loginUser(String username, String password);
+    User loginUser(String mobile_number, String otp);
 }

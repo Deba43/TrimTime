@@ -11,14 +11,12 @@ public class User {
 
     @NotNull(message = "Username is required")
     @Size(min = 5, max = 50)
-    private String username;
+    private String mobile_number;
 
     @NotNull(message = "Email is required")
-    private String email;
-
-    @NotNull(message = "Password is required")
-    private String password;
+    private String otp;
 
     private String accessToken;
+    private String refreshToken;
 
 }

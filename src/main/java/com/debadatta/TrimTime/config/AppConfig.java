@@ -17,7 +17,6 @@ import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -27,7 +26,7 @@ import org.modelmapper.convention.MatchingStrategies;
 
 @Configuration
 @Data
-public class DynamoDBConfig {
+public class AppConfig {
 
     @Value("${aws.dynamodb.endpoint}")
     private String dynamodbEndPoint;
@@ -40,12 +39,6 @@ public class DynamoDBConfig {
 
     @Value("${aws.secretkey}")
     private String SecretKey;
-
-    @Value("${aws.dynamodb.accesskey}")
-    private String dynamodbAccessKey;
-
-    @Value("${aws.dynamodb.secretkey}")
-    private String dynamodbSecretKey;
 
     @Value("${aws.dynamodb.sessionkey}")
     private String dynamodbSessionKey;
@@ -71,21 +64,25 @@ public class DynamoDBConfig {
     }
 
     private AmazonDynamoDB buildAmazonDynamoDB() {
-        return AmazonDynamoDBClientBuilder
-                .standard()
-                .withEndpointConfiguration(
-                        new AwsClientBuilder.EndpointConfiguration(dynamodbEndPoint, awsRegion))
+        AmazonDynamoDBClientBuilder builder = AmazonDynamoDBClientBuilder.standard()
+                .withRegion(awsRegion)
                 .withCredentials(
                         new AWSStaticCredentialsProvider(
-                                new BasicSessionCredentials(dynamodbAccessKey, dynamodbSecretKey, dynamodbSessionKey)))
-                .build();
+                                new BasicAWSCredentials(AccessKey, SecretKey)));
+
+        if (dynamodbEndPoint != null && !dynamodbEndPoint.isEmpty()) {
+            builder.withEndpointConfiguration(
+                    new AwsClientBuilder.EndpointConfiguration(dynamodbEndPoint, awsRegion));
+        }
+
+        return builder.build();
     }
 
     @Bean
     public AmazonS3 s3Client() {
-        AWSCredentials credentials = new BasicAWSCredentials(dynamodbAccessKey, dynamodbSecretKey);
         return AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withCredentials(new AWSStaticCredentialsProvider(
+                        new BasicAWSCredentials(AccessKey, SecretKey)))
                 .withRegion(awsRegion)
                 .build();
     }
@@ -93,16 +90,17 @@ public class DynamoDBConfig {
     @Bean
     public AmazonSNS snsClient() {
         return AmazonSNSClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(
+                        new BasicAWSCredentials(AccessKey, SecretKey)))
                 .withRegion(awsRegion)
                 .build();
     }
 
     @Bean
     public AWSCognitoIdentityProvider cognitoIdentityProvider() {
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(AccessKey, SecretKey);
-
         return AWSCognitoIdentityProviderClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .withCredentials(new AWSStaticCredentialsProvider(
+                        new BasicAWSCredentials(AccessKey, SecretKey)))
                 .withRegion(awsRegion)
                 .build();
     }

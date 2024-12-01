@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -22,6 +23,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -69,19 +71,22 @@ public class SecurityConfig {
   @Value("${spring.security.oauth2.client.registration.cognito.clientId}")
   private String clientId;
 
+  private final JwtFilter jwtFilter;
+
+  public SecurityConfig(JwtFilter jwtFilter) {
+    this.jwtFilter = jwtFilter;
+  }
+
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .authorizeHttpRequests(requests -> requests
-            .requestMatchers("/", "/login", "/register", "/logout").permitAll()
-            .requestMatchers("/Admin").hasRole("ADMIN")
-            .requestMatchers("/Customers").hasRole("CUSTOMER")
-            .requestMatchers("/Barbers").hasRole("BARBERS")
-            .anyRequest().authenticated())
-        .csrf(AbstractHttpConfigurer::disable)
-        .logout(logout -> logout.logoutSuccessHandler(
-            new CustomLogoutHandler(logoutUrl, logoutRedirectUrl, clientId)))
-        .oauth2ResourceServer(oauth2 -> oauth2.jwt());
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+      http
+              .csrf(csrf -> csrf.disable())
+              .authorizeHttpRequests(requests -> requests
+                      .requestMatchers("/auth/**").permitAll()
+                      .anyRequest().authenticated())
+              .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+    http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }

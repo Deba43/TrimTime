@@ -3,6 +3,7 @@ package com.debadatta.TrimTime.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.debadatta.TrimTime.dto.BarberRegistrationRequest;
 import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Reviews;
@@ -25,7 +27,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/Barbers")
+@RequestMapping("/Barber")
 public class BarbersController {
 
     @Autowired
@@ -35,15 +37,23 @@ public class BarbersController {
     @Autowired
     ReviewsService reviewsService;
 
-    // createProfile
-    @PostMapping("/createProfile")
-    public ResponseEntity<String> createProfile(@Valid @RequestBody Barbers barbers) {
-        String barberId = barbersService.createProfile(barbers);
-        return ResponseEntity.ok(barberId);
+    public BarbersController(BarbersService barbersService) {
+        this.barbersService = barbersService;
+    }
+
+    @PostMapping("/barber-registration")
+    public ResponseEntity<Barbers> registerBarber(@Valid @RequestBody BarberRegistrationRequest request) {
+        Barbers registeredBarber = barbersService.registerBarber(request);
+
+        if (registeredBarber != null) {
+            return ResponseEntity.ok(registeredBarber);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // updateProfile
-    @PutMapping("/updateProfile/{barber_id}")
+    @PutMapping("/dashboard/{barber_id}")
     public Barbers updateProfile(@PathVariable String barber_id, @RequestBody Barbers barbers) {
         return barbersService.updateProfile(barber_id, barbers);
     }
