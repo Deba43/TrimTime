@@ -33,7 +33,6 @@ public class BarbersService {
     barber.setEmail(request.getEmail());
     barber.setProfilePictureUrl(request.getProfilePictureUrl());
 
-    // Save to DynamoDB
     dynamoDBMapper.save(barber);
 
     return barber;

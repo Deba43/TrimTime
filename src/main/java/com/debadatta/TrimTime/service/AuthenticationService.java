@@ -19,8 +19,8 @@ public class AuthenticationService {
         this.cognitoService = cognitoService;
     }
 
-    public Customers authenticate(String mobileNumber, String otp) {
-        User user = cognitoService.loginUser(mobileNumber, otp);
+    public Customers authenticate(String mobile_number, String otp) {
+        User user = cognitoService.loginUser(mobile_number, otp);
 
         // Create a Customers object from the User information
         return customersRepo.findByMobileNumber(user.getMobile_number())

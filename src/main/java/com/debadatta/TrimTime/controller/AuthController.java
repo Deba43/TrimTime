@@ -37,8 +37,8 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String mobileNumber, @RequestParam String otp) {
-        Customers customer = authenticationService.authenticate(mobileNumber, otp);
+    public ResponseEntity<?> login(@RequestParam String mobile_number, @RequestParam String otp) {
+        Customers customer = authenticationService.authenticate(mobile_number, otp);
         return ResponseEntity.ok(customer);
     }
 
