@@ -34,7 +34,7 @@ public class AuthController {
     @Autowired
     private AuthenticationService authenticationService;
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String mobile_number, @RequestParam String otp) {
@@ -49,11 +49,11 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegistrationRequest userRegistrationRequest) {
-        User registeredUser = userService.registerUser(userRegistrationRequest);
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegistrationRequest req) {
+        User registeredUser = userService.registerUser(req);
 
         if (registeredUser != null) {
-            String role = userRegistrationRequest.getRole();
+            String role = req.getRole();
             if ("BARBER".equalsIgnoreCase(role)) {
                 return ResponseEntity.ok("Redirect to /Barber/barber-registration");
             } else if ("CUSTOMER".equalsIgnoreCase(role)) {
