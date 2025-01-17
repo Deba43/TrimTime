@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.debadatta.TrimTime.dto.BarberRegistrationRequest;
+import com.debadatta.TrimTime.dto.CustomerRegistrationRequest;
 import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
+import com.debadatta.TrimTime.model.Customers;
 import com.debadatta.TrimTime.model.Reviews;
 import com.debadatta.TrimTime.service.AppointmentsService;
 import com.debadatta.TrimTime.service.BarbersService;
@@ -41,16 +44,26 @@ public class BarbersController {
         this.barbersService = barbersService;
     }
 
-    @PostMapping("/barber-registration")
-    public ResponseEntity<Barbers> registerBarber(@Valid @RequestBody BarberRegistrationRequest request) {
-        Barbers registeredBarber = barbersService.registerBarber(request);
+    @PostMapping("/sendOTP")
+    public ResponseEntity<String> sendOTP(@RequestParam String mobileNumber) {
+        String message = barbersService.generateAndSendOTP(mobileNumber);
+        return ResponseEntity.ok(message);
+    }
 
-        if (registeredBarber != null) {
+    @PostMapping("/Barber-registration")
+    public ResponseEntity<Barbers> registerBarber(
+            @RequestParam String mobileNumber,
+            @RequestParam String otp,
+            @RequestBody BarberRegistrationRequest request) {
+
+        try {
+            Barbers registeredBarber = barbersService.verifyOTPAndRegister(mobileNumber, otp, request);
             return ResponseEntity.ok(registeredBarber);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
 
     // updateProfile
     @PutMapping("/dashboard/{barber_id}")

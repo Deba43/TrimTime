@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.debadatta.TrimTime.dto.CustomerRegistrationRequest;
@@ -23,7 +24,6 @@ import com.debadatta.TrimTime.service.AppointmentsService;
 
 import com.debadatta.TrimTime.service.CustomersService;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -41,16 +41,26 @@ public class CustomersController {
         this.customersService = customersService;
     }
 
-     @PostMapping("/customer-registration")
-    public ResponseEntity<Customers> registerCustomer(@Valid @RequestBody CustomerRegistrationRequest request) {
-        Customers registeredCustomer = customersService.registerCustomer(request);
+    @PostMapping("/sendOTP")
+    public ResponseEntity<String> sendOTP(@RequestParam String mobileNumber) {
+        String message = customersService.generateAndSendOTP(mobileNumber);
+        return ResponseEntity.ok(message);
+    }
 
-        if (registeredCustomer != null) {
+    @PostMapping("/Customer-registration")
+    public ResponseEntity<Customers> registerCustomer(
+            @RequestParam String mobileNumber,
+            @RequestParam String otp,
+            @RequestBody CustomerRegistrationRequest request) {
+
+        try {
+            Customers registeredCustomer = customersService.verifyOTPAndRegister(mobileNumber, otp, request);
             return ResponseEntity.ok(registeredCustomer);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
 
     // updateProfile
     @PutMapping("dashboard/{customer_id}")
