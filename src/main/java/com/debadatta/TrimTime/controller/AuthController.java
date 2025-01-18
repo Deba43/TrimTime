@@ -5,8 +5,10 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,8 @@ public class AuthController {
     private AuthenticationService authenticationService;
     @Autowired
     UserService userService;
+    @Autowired
+    static Environment environment;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String mobile_number, @RequestParam String otp) {

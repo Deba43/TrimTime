@@ -61,7 +61,6 @@ public class CustomersController {
         }
     }
 
-
     // updateProfile
     @PutMapping("dashboard/{customer_id}")
     public Customers updateProfile(@PathVariable String customer_id, @RequestBody Customers customers) {
@@ -76,8 +75,8 @@ public class CustomersController {
 
     // searchByLocation
     @GetMapping("/searchByLocation/{location}")
-    public ResponseEntity<List<Barbers>> searchByLocation(@PathVariable String location) {
-        List<Barbers> barbers = customersService.searchByLocation(location);
+    public ResponseEntity<List<Barbers>> searchByLocation(@RequestParam String query) {
+        List<Barbers> barbers = customersService.searchByLocation(query);
 
         if (barbers != null && !barbers.isEmpty()) {
             return ResponseEntity.ok(barbers); // Return barbers at that location

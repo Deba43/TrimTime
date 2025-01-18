@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -47,9 +49,12 @@ public class SecurityConfig {
   @Value("${spring.security.oauth2.client.registration.cognito.clientId}")
   private String clientId;
 
+  private final Environment environment;
   private final JwtFilter jwtFilter;
 
-  public SecurityConfig(JwtFilter jwtFilter) {
+  @Autowired
+  public SecurityConfig(Environment environment, JwtFilter jwtFilter) {
+    this.environment = environment;
     this.jwtFilter = jwtFilter;
   }
 
@@ -63,6 +68,14 @@ public class SecurityConfig {
             .anyRequest().authenticated()) // All other requests require authentication
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
+        .logout(logout -> logout
+            .logoutUrl("/logout") // Define the logout endpoint
+            .logoutSuccessHandler(new CustomLogoutHandler(
+                environment.getProperty("aws.cognito.logoutUrl"),
+                environment.getProperty("aws.cognito.logout.success.logout_url"),
+                environment.getProperty("aws.cognito.clientId"))) // Use custom logout handler
+            .invalidateHttpSession(true) // Invalidate session
+            .deleteCookies("JSESSIONID")) // Optionally delete cookies
         .addFilterBefore(jwtFilter, BasicAuthenticationFilter.class); // Use your JwtFilter
 
     return http.build();
