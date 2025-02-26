@@ -1,24 +1,15 @@
 package com.debadatta.TrimTime.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.amazonaws.regions.Regions;
+import org.springframework.stereotype.Service;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sns.AmazonSNSClient;
-import com.amazonaws.services.sns.AmazonSNSClientBuilder;
-import com.amazonaws.services.sns.model.PublishRequest;
-import com.debadatta.TrimTime.dto.CustomerRegistrationRequest;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.debadatta.TrimTime.model.Admin;
 import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
@@ -38,49 +29,14 @@ public class CustomersService {
   @Autowired
   final private DynamoDBMapper dynamoDBMapper;
 
-  private Map<String, String> otpStorage = new HashMap<>();
-
   public String createProfile(Customers customers) {
     return customersRepo.createProfile(customers);
   }
 
-  public String generateAndSendOTP(String mobileNumber) {
-  
-    String otp = String.format("%06d", new Random().nextInt(999999));
-    otpStorage.put(mobileNumber, otp);
-
-    AmazonSNS snsClient = AmazonSNSClientBuilder.standard()
-        .withRegion("ap-east-1")
-        .build();
-    PublishRequest publishRequest = new PublishRequest()
-        .withMessage("Your OTP is: " + otp)
-        .withPhoneNumber(mobileNumber);
-    snsClient.publish(publishRequest);
-
-    System.out.println("Sending OTP: " + otp + " to mobile number: " + mobileNumber);
-    return otp; 
-  }
-
-  public Customers verifyOTPAndRegister(String mobileNumber, String enteredOtp, CustomerRegistrationRequest request) {
-    String storedOtp = otpStorage.get(mobileNumber);
-
-    if (storedOtp == null || !storedOtp.equals(enteredOtp)) {
-      throw new IllegalArgumentException("Invalid or expired OTP");
+  public Optional<Customers> findByPhoneNumber(String phone_no) {
+        List<Customers> cus = dynamoDBMapper.scan(Customers.class, new DynamoDBScanExpression());
+        return cus.stream().filter(user -> user.getPhone_no().equals(phone_no)).findFirst();
     }
-
-    otpStorage.remove(mobileNumber);
-
-    Customers customer = new Customers();
-    customer.setName(request.getName());
-    customer.setAge(request.getAge());
-    customer.setMobileNumber(request.getMobileNumber());
-    customer.setEmail(request.getEmail());
-    customer.setProfilePictureUrl(request.getProfilePictureUrl());
-
-    dynamoDBMapper.save(customer);
-
-    return customer;
-  }
 
   public String deleteProfile(String customer_id) {
     return customersRepo.deleteProfile(customer_id);

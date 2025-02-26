@@ -28,22 +28,24 @@ public class BarbersRepo {
         }
         if (barbers.getName() != null)
             existingBarbers.setName(barbers.getName());
-        if (barbers.getMobileNumber() != null)
-            existingBarbers.setMobileNumber(barbers.getMobileNumber());
+        if (barbers.getPhone_no() != null)
+            existingBarbers.setPhone_no(barbers.getPhone_no());
+        if (barbers.getPassword() != null)
+            existingBarbers.setPassword(barbers.getPassword());
         if (barbers.getBarberShopName() != null)
             existingBarbers.setBarberShopName(barbers.getBarberShopName());
         if (barbers.getLocation() != null)
             existingBarbers.setLocation(barbers.getLocation());
-        if (barbers.getAvailability() != null)
-            existingBarbers.setAvailability(barbers.getAvailability());
+
+        if (barbers.getEmail() != null)
+            existingBarbers.setEmail(barbers.getEmail());
+
         if (barbers.getExperience() != null)
             existingBarbers.setExperience(barbers.getExperience());
         if (barbers.getRole() != null)
             existingBarbers.setRole(barbers.getRole());
         if (barbers.getBio() != null)
             existingBarbers.setBio(barbers.getBio());
-        if (barbers.getProfilePictureUrl() != null)
-            existingBarbers.setProfilePictureUrl(barbers.getProfilePictureUrl());
 
         dynamoDBMapper.save(existingBarbers);
 

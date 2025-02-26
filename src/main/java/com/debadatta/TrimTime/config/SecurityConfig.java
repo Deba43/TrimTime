@@ -65,6 +65,7 @@ public class SecurityConfig {
         .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/auth/**").permitAll() // Allow public access to `/auth/**`
+            .requestMatchers("/Barber/**").hasRole("BARBER")
             .anyRequest().authenticated()) // All other requests require authentication
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session

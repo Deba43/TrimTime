@@ -3,29 +3,25 @@ package com.debadatta.TrimTime.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.RestController;
 
-import com.debadatta.TrimTime.dto.BarberRegistrationRequest;
-import com.debadatta.TrimTime.dto.CustomerRegistrationRequest;
 import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
-import com.debadatta.TrimTime.model.Customers;
 import com.debadatta.TrimTime.model.Reviews;
 import com.debadatta.TrimTime.service.AppointmentsService;
 import com.debadatta.TrimTime.service.BarbersService;
 import com.debadatta.TrimTime.service.ReviewsService;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -43,27 +39,6 @@ public class BarbersController {
     public BarbersController(BarbersService barbersService) {
         this.barbersService = barbersService;
     }
-
-    @PostMapping("/sendOTP")
-    public ResponseEntity<String> sendOTP(@RequestParam String mobileNumber) {
-        String message = barbersService.generateAndSendOTP(mobileNumber);
-        return ResponseEntity.ok(message);
-    }
-
-    @PostMapping("/Barber-registration")
-    public ResponseEntity<Barbers> registerBarber(
-            @RequestParam String mobileNumber,
-            @RequestParam String otp,
-            @RequestBody BarberRegistrationRequest request) {
-
-        try {
-            Barbers registeredBarber = barbersService.verifyOTPAndRegister(mobileNumber, otp, request);
-            return ResponseEntity.ok(registeredBarber);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
 
     // updateProfile
     @PutMapping("/dashboard/{barber_id}")

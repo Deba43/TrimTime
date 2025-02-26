@@ -37,10 +37,16 @@ public class CustomersRepo {
         }
         if (existingCustomers.getName() != null)
             existingCustomers.setName(customers.getName());
-        if (existingCustomers.getMobileNumber() != null)
-            existingCustomers.setMobileNumber(customers.getMobileNumber());
-        if (existingCustomers.getProfilePictureUrl() != null)
-            existingCustomers.setProfilePictureUrl(customers.getProfilePictureUrl());
+        if (existingCustomers.getAge() != null)
+            existingCustomers.setAge(customers.getAge());
+        if (existingCustomers.getName() != null)
+            existingCustomers.setName(customers.getName());
+        if (existingCustomers.getPhone_no() != null)
+            existingCustomers.setPhone_no(customers.getPhone_no());
+        if (existingCustomers.getPassword() != null)
+            existingCustomers.setPassword(customers.getPassword());
+        if (existingCustomers.getEmail() != null)
+            existingCustomers.setEmail(customers.getEmail());
 
         dynamoDBMapper.save(existingCustomers);
 

@@ -27,24 +27,14 @@ public class AdminRepo {
         }
         if (admin.getName() != null)
             load.setName(admin.getName());
-        if (admin.getMobileNumber() != null)
-            load.setMobileNumber(admin.getMobileNumber());
+        if (admin.getPhone_no() != null)
+            load.setPhone_no(admin.getPhone_no());
         if (admin.getEmail() != null)
             load.setEmail(admin.getEmail());
         if (admin.getPassword() != null)
             load.setPassword(admin.getPassword());
         if (admin.getRole() != null)
             load.setRole(admin.getRole());
-        if (admin.getAccountStatus() != null)
-            load.setAccountStatus(admin.getAccountStatus());
-        if (admin.getPermissions() != null)
-            load.setPermissions(admin.getPermissions());
-        //if (admin.isTwoFactorEnabled() == false)
-            load.setTwoFactorEnabled(admin.isTwoFactorEnabled());
-        if (admin.getTwofactorSecret() != null)
-            load.setTwofactorSecret(admin.getTwofactorSecret());
-        if (admin.getProfilePictureUrl() != null)
-            load.setProfilePictureUrl(admin.getProfilePictureUrl());
 
         dynamoDBMapper.save(load);
 

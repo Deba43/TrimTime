@@ -9,6 +9,6 @@ public class BarberRegistrationRequest {
     private String location;
     private String mobileNumber;
     private String email;
-    private String profilePictureUrl;
+    
 }
 

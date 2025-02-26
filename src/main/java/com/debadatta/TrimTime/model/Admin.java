@@ -36,7 +36,7 @@ public class Admin {
     @DynamoDBAttribute(attributeName = "mobileNumber")
     @NotNull(message = "Mobile Number can't be null")
     @Pattern(regexp = "^[0-9]{10}$", message = "Mobile Number must be 10 digits")
-    private String mobileNumber;
+    private String phone_no;
 
     @DynamoDBAttribute(attributeName = "email")
     @NotNull(message = "Email can't be null")
@@ -53,19 +53,5 @@ public class Admin {
     @NotNull(message = "Role can't be null")
     private String role; // SUPER_ADMIN,MANAGER
 
-    @DynamoDBAttribute(attributeName = "accountStatus")
-    private String accountStatus; // active, inactive, suspend
-
-    @DynamoDBAttribute(attributeName = "pemissions")
-    private List<String> permissions;// read, write, delete
-
-    @DynamoDBAttribute(attributeName = "twofactorEnabled")
-    private boolean twoFactorEnabled;
-
-    @DynamoDBAttribute(attributeName = "twofactorSecret")
-    private String twofactorSecret;
-
-    @DynamoDBAttribute(attributeName = "profilePictureUrl")
-    private String profilePictureUrl;
 
 }
