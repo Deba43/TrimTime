@@ -1,21 +1,19 @@
 package com.debadatta.TrimTime.controller;
 
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
+
 
 import com.debadatta.TrimTime.dto.AdminDto;
 import com.debadatta.TrimTime.dto.BarbersDto;
@@ -25,14 +23,13 @@ import com.debadatta.TrimTime.dto.User;
 import com.debadatta.TrimTime.model.Admin;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Customers;
-import com.debadatta.TrimTime.service.AdminService;
-import com.debadatta.TrimTime.service.BarbersService;
-import com.debadatta.TrimTime.service.CognitoService;
-import com.debadatta.TrimTime.service.CustomersService;
-import com.debadatta.TrimTime.service.UserService;
+import com.debadatta.TrimTime.serv.AdminService;
+import com.debadatta.TrimTime.serv.BarbersService;
+import com.debadatta.TrimTime.serv.CognitoService;
+import com.debadatta.TrimTime.serv.CustomersService;
+import com.debadatta.TrimTime.serv.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import jakarta.validation.Valid;
 
 @RestController

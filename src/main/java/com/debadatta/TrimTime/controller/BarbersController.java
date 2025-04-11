@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.debadatta.TrimTime.model.Appointments;
 import com.debadatta.TrimTime.model.Barbers;
 import com.debadatta.TrimTime.model.Reviews;
-import com.debadatta.TrimTime.service.AppointmentsService;
-import com.debadatta.TrimTime.service.BarbersService;
-import com.debadatta.TrimTime.service.ReviewsService;
+import com.debadatta.TrimTime.serv.AppointmentsService;
+import com.debadatta.TrimTime.serv.BarbersService;
+import com.debadatta.TrimTime.serv.ReviewsService;
 
 import lombok.AllArgsConstructor;
 

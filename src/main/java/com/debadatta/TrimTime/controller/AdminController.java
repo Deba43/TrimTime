@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.debadatta.TrimTime.model.Admin;
 import com.debadatta.TrimTime.model.Appointments;
-import com.debadatta.TrimTime.service.AdminService;
-import com.debadatta.TrimTime.service.AppointmentsService;
+import com.debadatta.TrimTime.serv.AdminService;
+import com.debadatta.TrimTime.serv.AppointmentsService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
