@@ -37,8 +37,7 @@ public class AppointmentsService {
 
         Barbers barber = barbersRepo.getBarbersById(updatedAppointments.getBarber_id());
 
-        if (barber != null && barber.isAvailable(updatedAppointments.getAppointment_date(),
-                updatedAppointments.getAppointment_time())) {
+        if (barber != null) {
 
             existingAppointment.setAppointment_date(updatedAppointments.getAppointment_date());
             existingAppointment.setAppointment_time(updatedAppointments.getAppointment_time());
